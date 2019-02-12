@@ -2,42 +2,49 @@
 (function() {
   const directives = [{
     name: 'ng-click',
-    functions: [function(element, cb) {
+    method(element, cb) {
       element.addEventListener('click', function() {
-        const fn = new Function(cb);
-        fn();
+        const func = new Function(cb);
+        func();
       });
-    }]
+    }
   }];
 
   const smallAngular = {
-    directive(ngName, cb) {
+    directive(ngName, method) {
       directives.push({
         name: ngName,
-        method: cb
+        method
       });
     },
     compile(node) {
-      for (let i = 0; i <= node.length - 1; i++) {
+      const attr = node.attributes;
+      const { length } = attr;
+
+      for (let i = 0; i <= length - 1; i++) {
         directives.forEach(element => {
-          if (node[i].name === element.name) {
-            element.method();
+          if (attr[i].name === element.name) {
+            element.method(node, attr[i].value);
           }
         });
       }
     },
     bootstrap(node = '[ng-app]') {
       const appWrapper = document.querySelector(node);
-      const child = appWrapper.children;
+      const { children } = appWrapper;
 
-      [...child].forEach(item =>
-        this.compile(item.attributes)
+      [...children].forEach(item =>
+        this.compile(item)
       );
     }
   };
 
   window.smallAngular = smallAngular;
-  // smallAngular.directive('ng-click', () => console.log('i am ng-click'));
-  // smallAngular.directive('ng-init', () => console.log('i am ng-init'));
-  smallAngular.bootstrap();
+  smallAngular.directive('ng-click', el => console.log('called ng-click on', el));
+  smallAngular.directive('ng-show', el => console.log('called ng-show on', el));
+  smallAngular.directive('ng-make-short', el => console.log('called ng-make-short on', el));
+
+  // smallAngular.bootstrap();
+  // const appWrapper = document.querySelector('p');
+  // smallAngular.compile(appWrapper);
 }());
