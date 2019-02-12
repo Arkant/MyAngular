@@ -21,7 +21,7 @@
         });
       }
     },
-    bootstrap(node = document.querySelector('*[ng-app]')) {
+    bootstrap(node = document.querySelector('[ng-app]')) {
       const children = node.querySelectorAll('*');
 
       children.forEach(el =>
