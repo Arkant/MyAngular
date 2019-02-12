@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 (function() {
   const directives = [];
 
@@ -9,12 +10,22 @@
       });
     },
     compile(node) {
-      return undefined;
+      for (let i = 0; i <= node.length - 1; i++) {
+        console.log(`${node[i].name} -> ${node[i].value}`);
+      }
     },
     bootstrap(node) {
-      return undefined;
+      const appWrapper = document.querySelector('[ng-app]');
+      const child = appWrapper.children;
+      console.log(child);
+
+      [...child].map(item =>
+        this.compile(item.attributes)
+      );
     }
   };
 
   window.smallAngular = smallAngular;
+  smallAngular.directive('ng-click', () => console.log('i am ng-click'));
+  smallAngular.bootstrap();
 }());
