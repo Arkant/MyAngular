@@ -1,9 +1,12 @@
 (function() {
-  const directives = [{}];
+  const directives = [];
 
   const smallAngular = {
-    directive() {
-      return undefined;
+    directive(ngName, cb) {
+      directives.push({
+        name: ngName,
+        method: cb
+      });
     },
     compile(node) {
       return undefined;
