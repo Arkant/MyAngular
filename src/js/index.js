@@ -1,14 +1,6 @@
 /* eslint-disable no-console */
 (function() {
-  const directives = [{
-    name: 'ng-click',
-    method(element, cb) {
-      element.addEventListener('click', function() {
-        const func = new Function(cb);
-        func();
-      });
-    }
-  }];
+  const directives = [{}];
 
   const smallAngular = {
     directive(ngName, method) {
@@ -29,12 +21,11 @@
         });
       }
     },
-    bootstrap(node = '[ng-app]') {
-      const appWrapper = document.querySelector(node);
-      const { children } = appWrapper;
+    bootstrap(node = document.querySelector('*[ng-app]')) {
+      const children = node.querySelectorAll('*');
 
-      [...children].forEach(item =>
-        this.compile(item)
+      children.forEach(el =>
+        this.compile(el)
       );
     }
   };
@@ -44,7 +35,7 @@
   smallAngular.directive('ng-show', el => console.log('called ng-show on', el));
   smallAngular.directive('ng-make-short', el => console.log('called ng-make-short on', el));
 
-  // smallAngular.bootstrap();
+  smallAngular.bootstrap();
   // const appWrapper = document.querySelector('p');
   // smallAngular.compile(appWrapper);
 }());
