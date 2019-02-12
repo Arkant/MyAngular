@@ -32,6 +32,7 @@
 
   window.smallAngular = smallAngular;
   smallAngular.directive('ng-click', el => console.log('called ng-click on', el));
+  smallAngular.directive('ng-init', el => console.log('called ng-init on', el));
   smallAngular.directive('ng-show', el => console.log('called ng-show on', el));
   smallAngular.directive('ng-make-short', el => console.log('called ng-make-short on', el));
 
