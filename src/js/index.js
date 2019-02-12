@@ -18,13 +18,13 @@
       });
     },
     compile(node) {
-      const attr = node.attributes;
-      const { length } = attr;
+      const { attributes } = node;
+      const { length } = attributes;
 
       for (let i = 0; i <= length - 1; i++) {
         directives.forEach(element => {
-          if (attr[i].name === element.name) {
-            element.method(node, attr[i].value);
+          if (attributes[i].name === element.name) {
+            element.method(node, attributes[i].value);
           }
         });
       }
