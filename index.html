@@ -7,9 +7,11 @@
     <title>MyAngular</title>
     <link rel="stylesheet" href="public/css/style.css">
 </head>
-<body ng-app>
-    <p id="1" ng-click = "name = vasya">as</p>
-    <p id="2">as</p>
+<body ng-app ng-init="name='ivan'">
+    <div ng-show="true"> hi Ivan!!! </div>
+    <input ng-model="name"/>
+    <p ng-make-short ng-click="console.log(1)">qqq qqq qqq qqq qqq qqq qqq</p>
+    <p ng-bind="name"></p>
 </body>
 <script src="src/js/index.js"></script>
 </html>
