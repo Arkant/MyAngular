@@ -39,13 +39,21 @@
       children.forEach(this.compile);
     }
   };
-
   window.smallAngular = smallAngular;
-  smallAngular.directive('ng-show', (scope, el, attrs) => {
+
+  smallAngular.directive('ng-show', (scope, el) => {
     const data = el.getAttribute('ng-show');
     el.style.display = eval(data) ? 'block' : 'none';
     scope.$watch(data, () => {
       el.style.display = eval(data) ? 'block' : 'none';
+    });
+  });
+
+  smallAngular.directive('ng-hide', (scope, el) => {
+    const data = el.getAttribute('ng-hide');
+    el.style.display = eval(data) ? 'none' : 'block';
+    scope.$watch('ng-hide', () => {
+      el.style.display = eval(data) ? 'none' : 'block';
     });
   });
 
@@ -57,7 +65,14 @@
     });
   });
 
-  smallAngular.directive('ng-init', el => console.log('called ng-init on', el));
+  smallAngular.directive('ng-init', (scope, el) => {
+    const data = el.getAttribute('ng-init');
+    eval(data);
+  });
+  smallAngular.directive('ng-bind', el => console.log('called ng-bind on', el));
+  smallAngular.directive('ng-model', el => console.log('called ng-model on', el));
+  smallAngular.directive('ng-repeat', el => console.log('called ng-repeat on', el));
+  smallAngular.directive('ng-random-color', el => console.log('called ng-random-color on', el));
   smallAngular.directive('ng-make-short', el => console.log('called ng-make-short on', el));
 
   smallAngular.bootstrap();
