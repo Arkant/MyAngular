@@ -1,6 +1,18 @@
+/* eslint-disable no-eval */
 /* eslint-disable no-console */
 (function() {
   const directives = [{}];
+  const notNgAttrs = [];
+  const watchers = [];
+  const scope = window;
+
+  scope.$watch = (name, watcher) => {
+    watchers.push({ name, watcher });
+  };
+
+  scope.$apply = () => {
+    watchers.forEach(({ watcher }) => watcher());
+  };
 
   const smallAngular = {
     directive(ngName, method) {
@@ -16,7 +28,7 @@
       for (let i = 0; i <= length - 1; i++) {
         directives.forEach(element => {
           if (attributes[i].name === element.name) {
-            element.method(node, attributes[i].value);
+            element.method(scope, node, attributes[i].value);
           }
         });
       }
@@ -31,9 +43,21 @@
   };
 
   window.smallAngular = smallAngular;
-  smallAngular.directive('ng-click', el => console.log('called ng-click on', el));
+  smallAngular.directive('ng-show', (scope, el, attrs) => {
+    const data = el.getAttribute('ng-show');
+    el.style.display = eval(data) ? 'block' : 'none';
+    scope.$watch(data, () => {
+      el.style.display = eval(data) ? 'block' : 'none';
+    });
+  });
+  smallAngular.directive('ng-click', (scope, el) => {
+    el.addEventListener('click', e => {
+      const data = el.getAttribute('ng-click');
+      eval(data);
+      scope.$apply();
+    });
+  });
   smallAngular.directive('ng-init', el => console.log('called ng-init on', el));
-  smallAngular.directive('ng-show', el => console.log('called ng-show on', el));
   smallAngular.directive('ng-make-short', el => console.log('called ng-make-short on', el));
 
   smallAngular.bootstrap();
