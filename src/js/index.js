@@ -16,19 +16,19 @@
 
   const smallAngular = {
     directive(ngName, method) {
-      directives.push({
-        name: ngName,
-        method
-      });
+      if (typeof method !== 'function') {
+        throw new Error('Callback must be a function!');
+      }
+
+      directives.push({ ngName, method });
     },
     compile(node) {
-      const { attributes } = node;
-      const { length } = attributes;
-
-      for (let i = 0; i <= length - 1; i++) {
+      for (let i = 0; i < node.attributes.length; i++) {
         directives.forEach(element => {
-          if (attributes[i].name === element.name) {
-            element.method(scope, node, attributes[i].value);
+          const { name, value } = node.attributes[i];
+
+          if (name === element.ngName) {
+            element.method(scope, node, value);
           }
         });
       }
@@ -36,9 +36,7 @@
     bootstrap(node = document.querySelector('[ng-app]')) {
       const children = node.querySelectorAll('*');
 
-      children.forEach(el =>
-        this.compile(el)
-      );
+      children.forEach(this.compile);
     }
   };
 
@@ -50,6 +48,7 @@
       el.style.display = eval(data) ? 'block' : 'none';
     });
   });
+
   smallAngular.directive('ng-click', (scope, el) => {
     el.addEventListener('click', e => {
       const data = el.getAttribute('ng-click');
@@ -57,10 +56,9 @@
       scope.$apply();
     });
   });
+
   smallAngular.directive('ng-init', el => console.log('called ng-init on', el));
   smallAngular.directive('ng-make-short', el => console.log('called ng-make-short on', el));
 
   smallAngular.bootstrap();
-  // const appWrapper = document.querySelector('p');
-  // smallAngular.compile(appWrapper);
 }());
