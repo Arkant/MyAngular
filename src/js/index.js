@@ -2,7 +2,6 @@
 /* eslint-disable no-console */
 (function() {
   const directives = [{}];
-  const notNgAttrs = [];
   const watchers = [];
   const scope = window;
 
@@ -47,6 +46,7 @@
     scope.$watch(data, () => {
       el.style.display = eval(data) ? 'block' : 'none';
     });
+    scope.$apply();
   });
 
   smallAngular.directive('ng-hide', (scope, el) => {
@@ -55,6 +55,7 @@
     scope.$watch('ng-hide', () => {
       el.style.display = eval(data) ? 'none' : 'block';
     });
+    scope.$apply();
   });
 
   smallAngular.directive('ng-click', (scope, el) => {
@@ -70,7 +71,18 @@
     eval(data);
     scope.$apply();
   });
-  smallAngular.directive('ng-bind', el => console.log('called ng-bind on', el));
+
+  smallAngular.directive('ng-bind', (scope, el) => {
+    const data = el.getAttribute('ng-bind');
+
+    if (scope[data]) {
+      scope.$watch('ng-bind', () => {
+        el.innerHTML = scope[data];
+      });
+    }
+    scope.$apply();
+  });
+
   smallAngular.directive('ng-model', el => console.log('called ng-model on', el));
   smallAngular.directive('ng-repeat', el => console.log('called ng-repeat on', el));
   smallAngular.directive('ng-random-color', el => console.log('called ng-random-color on', el));
