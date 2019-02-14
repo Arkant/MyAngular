@@ -83,9 +83,22 @@
     scope.$apply();
   });
 
+  smallAngular.directive('ng-random-color', (scope, el) => {
+    const data = el.getAttribute('ng-random-color');
+
+    el.addEventListener('click', e => {
+      const randomColor = Math.floor(Math.random() * 16777215).toString(16);
+
+      el.style.backgroundColor = `#${randomColor}`;
+      scope.$watch(data, () => {
+        el.style.backgroundColor = `#${randomColor}`;
+      });
+      scope.$apply();
+    });
+  });
+
   smallAngular.directive('ng-model', el => console.log('called ng-model on', el));
   smallAngular.directive('ng-repeat', el => console.log('called ng-repeat on', el));
-  smallAngular.directive('ng-random-color', el => console.log('called ng-random-color on', el));
   smallAngular.directive('ng-make-short', el => console.log('called ng-make-short on', el));
 
   smallAngular.bootstrap();
