@@ -68,6 +68,7 @@
   smallAngular.directive('ng-init', (scope, el) => {
     const data = el.getAttribute('ng-init');
     eval(data);
+    scope.$apply();
   });
   smallAngular.directive('ng-bind', el => console.log('called ng-bind on', el));
   smallAngular.directive('ng-model', el => console.log('called ng-model on', el));
