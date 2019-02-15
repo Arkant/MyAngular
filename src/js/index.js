@@ -4,6 +4,13 @@
   const directives = [{}];
   const watchers = [];
   const scope = window;
+  const repeatElements = (items, el, parent) => {
+    items.forEach(item => {
+      const newLi = el.cloneNode();
+      newLi.innerHTML = item;
+      parent.appendChild(newLi);
+    });
+  };
 
   scope.$watch = (name, watcher) => {
     watchers.push({ name, watcher });
@@ -43,7 +50,7 @@
   smallAngular.directive('ng-show', (scope, el) => {
     const data = el.getAttribute('ng-show');
     el.style.display = eval(data) ? 'block' : 'none';
-    scope.$watch(data, () => {
+    scope.$watch(name, () => {
       el.style.display = eval(data) ? 'block' : 'none';
     });
     scope.$apply();
@@ -52,7 +59,7 @@
   smallAngular.directive('ng-hide', (scope, el) => {
     const data = el.getAttribute('ng-hide');
     el.style.display = eval(data) ? 'none' : 'block';
-    scope.$watch('ng-hide', () => {
+    scope.$watch(name, () => {
       el.style.display = eval(data) ? 'none' : 'block';
     });
     scope.$apply();
@@ -75,18 +82,61 @@
   smallAngular.directive('ng-bind', (scope, el) => {
     const data = el.getAttribute('ng-bind');
 
-    if (scope[data]) {
-      scope.$watch('ng-bind', () => {
-        el.innerHTML = scope[data];
-      });
-    }
+    scope.$watch(name, () => {
+      el.innerHTML = scope[data];
+    });
     scope.$apply();
   });
 
-  smallAngular.directive('ng-model', el => console.log('called ng-model on', el));
-  smallAngular.directive('ng-repeat', el => console.log('called ng-repeat on', el));
-  smallAngular.directive('ng-random-color', el => console.log('called ng-random-color on', el));
-  smallAngular.directive('ng-make-short', el => console.log('called ng-make-short on', el));
+  smallAngular.directive('ng-random-color', (scope, el) => {
+    el.addEventListener('click', e => {
+      const randomColor = Math.floor(Math.random() * 16777215).toString(16);
+
+      scope.$watch(name, () => {
+        el.style.backgroundColor = `#${randomColor}`;
+      });
+      scope.$apply();
+    });
+  });
+
+  smallAngular.directive('ng-repeat', (scope, el) => {
+    const data = el.getAttribute('ng-repeat');
+    const parent = el.parentNode;
+    const splitteData = data.split(' ');
+    const items = Array.from(scope[splitteData[2]]);
+
+    repeatElements(items, el, parent);
+
+    scope.$watch(name, () => {
+      const items = Array.from(scope[splitteData[2]]);
+      const similarEls = document.querySelectorAll(`[ng-repeat="${data}"]`);
+
+      repeatElements(items, el, parent);
+
+      for (const $el of Array.from(similarEls)) {
+        $el.remove();
+      }
+    });
+    scope.$apply();
+  });
+
+  smallAngular.directive('ng-make-short', (scope, el) => {
+    const length = el.getAttribute('length') || 5;
+
+    el.innerHTML = `${el.innerHTML.slice(0, length)} ...`;
+    scope.$watch('ng-make-short', () => {
+      el.innerHTML = `${el.innerHTML.slice(0, length)} ...`;
+    });
+    scope.$apply();
+  });
+
+  smallAngular.directive('ng-model', (scope, el) => {
+    el.addEventListener('input', () => {
+      const data = el.getAttribute('ng-model');
+      scope[data] = el.value;
+      scope.$apply();
+    });
+  });
 
   smallAngular.bootstrap();
 }());

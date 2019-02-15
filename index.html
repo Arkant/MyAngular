@@ -8,11 +8,12 @@
     <link rel="stylesheet" href="public/css/style.css">
 </head>
 <body ng-app>
-    <div ng-init="name='ivan'" ng-click ng-hide="true"> hi Ivan!!! </div>
+    <div ng-init="name = 'ivan'" ng-hide="false"> hi Ivan!!! </div>
     <input ng-model="name"/>
-    <p ng-make-short ng-click="name = 'jorik'">qqq qqq qqq qqq qqq qqq qqq</p>
+    <p ng-make-short length="9">qqq qqq qqq qqq qqq qqq qqq</p>
+    <button ng-random-color ng-click="name === 'ivan' ? name = 'jorik' : name='ivan'">Ivan or Jorik</button>
     <ul>
-      <li ng-click></li>
+      <li ng-repeat="letter in name"></li>
     </ul>
     <p ng-bind="name"></p>
 </body>
