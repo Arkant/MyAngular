@@ -4,6 +4,19 @@
   const directives = [{}];
   const watchers = [];
   const scope = window;
+  const deleteElements = similarEls => {
+    for (const $el of Array.from(similarEls)) {
+      $el.remove();
+    }
+  };
+
+  const repeatElements = (items, el, parent) => {
+    items.forEach(item => {
+      const newLi = el.cloneNode();
+      newLi.innerHTML = item;
+      parent.appendChild(newLi);
+    });
+  };
 
   scope.$watch = (name, watcher) => {
     watchers.push({ name, watcher });
@@ -89,7 +102,6 @@
     el.addEventListener('click', e => {
       const randomColor = Math.floor(Math.random() * 16777215).toString(16);
 
-      el.style.backgroundColor = `#${randomColor}`;
       scope.$watch(data, () => {
         el.style.backgroundColor = `#${randomColor}`;
       });
@@ -97,8 +109,27 @@
     });
   });
 
+  smallAngular.directive('ng-repeat', (scope, el) => {
+    const data = el.getAttribute('ng-repeat');
+    const parent = el.parentNode;
+    const splitteData = data.split(' ');
+    const items = Array.from(scope[splitteData[2]]);
+    const similarEls = document.querySelectorAll(`[ng-repeat="${data}"]`);
+
+    repeatElements(items, el, parent);
+    deleteElements(similarEls);
+
+    scope.$watch(splitteData[2], () => {
+      const items = Array.from(scope[splitteData[2]]);
+      const similarEls = document.querySelectorAll(`[ng-repeat="${data}"]`);
+
+      repeatElements(items, el, parent);
+      deleteElements(similarEls);
+    });
+    scope.$apply();
+  });
+
   smallAngular.directive('ng-model', el => console.log('called ng-model on', el));
-  smallAngular.directive('ng-repeat', el => console.log('called ng-repeat on', el));
   smallAngular.directive('ng-make-short', el => console.log('called ng-make-short on', el));
 
   smallAngular.bootstrap();
