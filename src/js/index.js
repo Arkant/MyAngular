@@ -83,7 +83,7 @@
     const data = el.getAttribute('ng-bind');
 
     scope.$watch(name, () => {
-      el.innerHTML = scope[data];
+      el.innerText = scope[data];
     });
     scope.$apply();
   });
@@ -123,9 +123,9 @@
   smallAngular.directive('ng-make-short', (scope, el) => {
     const length = el.getAttribute('length') || 5;
 
-    el.innerHTML = `${el.innerHTML.slice(0, length)} ...`;
-    scope.$watch(name, () => {
-      el.innerHTML = `${el.innerHTML.slice(0, length)} ...`;
+    el.innerText = `${el.innerText.slice(0, length)} ...`;
+    scope.$watch(() => scope.value, () => {
+      el.innerText = `${el.innerText.slice(0, length)} ...`;
     });
     scope.$apply();
   });
