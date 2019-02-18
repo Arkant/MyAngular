@@ -6,8 +6,11 @@
 <li>Clone the project</li>
 <li>Install modules: npm install</li>
 <li>To create custom directive write:<br>
-  <b>smallAngular.directive('ng-click', function(el) {<br>
+  <b>smallAngular.directive('/* directive name */', function(el) {<br>
       /* Your code */<br>
      });</b>
 </li>
+<li>Add directive name in HTML:
+ < p /* directive name */> Click me < /p> </li>
+<li>To run module write smallAngular.bootstrap()</li>
 </ol>
