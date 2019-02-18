@@ -124,17 +124,21 @@
     const length = el.getAttribute('length') || 5;
 
     el.innerHTML = `${el.innerHTML.slice(0, length)} ...`;
-    scope.$watch('ng-make-short', () => {
+    scope.$watch(name, () => {
       el.innerHTML = `${el.innerHTML.slice(0, length)} ...`;
     });
     scope.$apply();
   });
 
   smallAngular.directive('ng-model', (scope, el) => {
+    const data = el.getAttribute('ng-model');
+
     el.addEventListener('input', () => {
-      const data = el.getAttribute('ng-model');
       scope[data] = el.value;
       scope.$apply();
+    });
+    scope.$watch(name, () => {
+      el.value = eval(data);
     });
   });
 
