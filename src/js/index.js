@@ -78,7 +78,6 @@
     scope.$watch(name, () => {
       el.innerText = scope[data];
     });
-    scope.$apply();
   });
 
   smallAngular.directive('ng-random-color', (scope, el) => {
@@ -92,8 +91,7 @@
     const data = el.getAttribute('ng-repeat');
     const parent = el.parentNode;
     const [, item] = data.split(' in ');
-
-    scope.$watch(name, () => {
+    const repeatNodes = () => {
       const items = Array.from(scope[item]);
       const similarEls = document.querySelectorAll(`[ng-repeat="${data}"]`);
 
@@ -106,12 +104,17 @@
       for (const $el of Array.from(similarEls)) {
         $el.remove();
       }
+    }
+    repeatNodes();
+    scope.$watch(name, () => {
+      repeatNodes();
     });
   });
 
   smallAngular.directive('ng-make-short', (scope, el, attrs) => {
     scope.$watch(() => attrs.length.value, () => {
-      el.innerText = `${el.innerText.slice(0, attrs.length.value || 5)} ...`;
+      const slicedText = el.innerText.slice(0, attrs.length.value || 5)
+      el.innerText = `${slicedText} ...`;
     });
   });
 
