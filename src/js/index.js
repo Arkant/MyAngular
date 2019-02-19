@@ -44,7 +44,7 @@
     const data = el.getAttribute('ng-show');
 
     el.style.display = eval(data) ? 'block' : 'none';
-    scope.$watch(() => scope[data], () => {
+    scope.$watch(() => eval(value), () => {
       el.style.display = eval(data) ? 'block' : 'none';
     });
   });
@@ -53,7 +53,7 @@
     const data = el.getAttribute('ng-hide');
 
     el.style.display = eval(data) ? 'none' : 'block';
-    scope.$watch(() => scope[data], () => {
+    scope.$watch(() => eval(value), () => {
       el.style.display = eval(data) ? 'none' : 'block';
     });
   });
@@ -75,7 +75,7 @@
   smallAngular.directive('ng-bind', (scope, el) => {
     const data = el.getAttribute('ng-bind');
 
-    scope.$watch(name, () => {
+    scope.$watch(eval(data), () => {
       el.innerText = scope[data];
     });
   });
@@ -125,7 +125,7 @@
       scope[data] = el.value;
       scope.$apply();
     });
-    scope.$watch(data, () => {
+    scope.$watch(() => eval(data), () => {
       el.value = eval(data);
     });
   });
