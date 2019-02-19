@@ -51,7 +51,7 @@
     const data = el.getAttribute('ng-show');
 
     el.style.display = eval(data) ? 'block' : 'none';
-    scope.$watch(data, () => {
+    scope.$watch(() => scope[data], () => {
       el.style.display = eval(data) ? 'block' : 'none';
     });
     scope.$apply();
@@ -61,7 +61,7 @@
     const data = el.getAttribute('ng-hide');
 
     el.style.display = eval(data) ? 'none' : 'block';
-    scope.$watch(data, () => {
+    scope.$watch(() => scope[data], () => {
       el.style.display = eval(data) ? 'none' : 'block';
     });
     scope.$apply();
