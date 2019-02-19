@@ -120,12 +120,9 @@
     scope.$apply();
   });
 
-  smallAngular.directive('ng-make-short', (scope, el) => {
-    const length = el.getAttribute('length') || 5;
-
-    el.innerText = `${el.innerText.slice(0, length)} ...`;
-    scope.$watch(() => scope.value, () => {
-      el.innerText = `${el.innerText.slice(0, length)} ...`;
+  smallAngular.directive('ng-make-short', (scope, el, attrs) => {
+    scope.$watch(() => attrs.length.value, () => {
+      el.innerText = `${el.innerText.slice(0, attrs.length.value || 5)} ...`;
     });
     scope.$apply();
   });
