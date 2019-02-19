@@ -49,8 +49,9 @@
 
   smallAngular.directive('ng-show', (scope, el) => {
     const data = el.getAttribute('ng-show');
+
     el.style.display = eval(data) ? 'block' : 'none';
-    scope.$watch(name, () => {
+    scope.$watch(data, () => {
       el.style.display = eval(data) ? 'block' : 'none';
     });
     scope.$apply();
@@ -58,16 +59,18 @@
 
   smallAngular.directive('ng-hide', (scope, el) => {
     const data = el.getAttribute('ng-hide');
+
     el.style.display = eval(data) ? 'none' : 'block';
-    scope.$watch(name, () => {
+    scope.$watch(data, () => {
       el.style.display = eval(data) ? 'none' : 'block';
     });
     scope.$apply();
   });
 
   smallAngular.directive('ng-click', (scope, el) => {
+    const data = el.getAttribute('ng-click');
+
     el.addEventListener('click', e => {
-      const data = el.getAttribute('ng-click');
       eval(data);
       scope.$apply();
     });
@@ -76,7 +79,6 @@
   smallAngular.directive('ng-init', (scope, el) => {
     const data = el.getAttribute('ng-init');
     eval(data);
-    scope.$apply();
   });
 
   smallAngular.directive('ng-bind', (scope, el) => {
@@ -91,24 +93,17 @@
   smallAngular.directive('ng-random-color', (scope, el) => {
     el.addEventListener('click', e => {
       const randomColor = Math.floor(Math.random() * 16777215).toString(16);
-
-      scope.$watch(name, () => {
-        el.style.backgroundColor = `#${randomColor}`;
-      });
-      scope.$apply();
+      el.style.backgroundColor = `#${randomColor}`;
     });
   });
 
   smallAngular.directive('ng-repeat', (scope, el) => {
     const data = el.getAttribute('ng-repeat');
     const parent = el.parentNode;
-    const splitteData = data.split(' ');
-    const items = Array.from(scope[splitteData[2]]);
-
-    repeatElements(items, el, parent);
+    const [, item] = data.split(' in ');
 
     scope.$watch(name, () => {
-      const items = Array.from(scope[splitteData[2]]);
+      const items = Array.from(scope[item]);
       const similarEls = document.querySelectorAll(`[ng-repeat="${data}"]`);
 
       repeatElements(items, el, parent);
@@ -134,7 +129,7 @@
       scope[data] = el.value;
       scope.$apply();
     });
-    scope.$watch(name, () => {
+    scope.$watch(data, () => {
       el.value = eval(data);
     });
   });
