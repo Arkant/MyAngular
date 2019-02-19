@@ -4,13 +4,6 @@
   const directives = [{}];
   const watchers = [];
   const scope = window;
-  const repeatElements = (items, el, parent) => {
-    items.forEach(item => {
-      const newLi = el.cloneNode();
-      newLi.innerHTML = item;
-      parent.appendChild(newLi);
-    });
-  };
 
   scope.$watch = (name, watcher) => {
     watchers.push({ name, watcher });
@@ -51,20 +44,18 @@
     const data = el.getAttribute('ng-show');
 
     el.style.display = eval(data) ? 'block' : 'none';
-    scope.$watch(data, () => {
+    scope.$watch(() => scope[data], () => {
       el.style.display = eval(data) ? 'block' : 'none';
     });
-    scope.$apply();
   });
 
   smallAngular.directive('ng-hide', (scope, el) => {
     const data = el.getAttribute('ng-hide');
 
     el.style.display = eval(data) ? 'none' : 'block';
-    scope.$watch(data, () => {
+    scope.$watch(() => scope[data], () => {
       el.style.display = eval(data) ? 'none' : 'block';
     });
-    scope.$apply();
   });
 
   smallAngular.directive('ng-click', (scope, el) => {
@@ -106,20 +97,22 @@
       const items = Array.from(scope[item]);
       const similarEls = document.querySelectorAll(`[ng-repeat="${data}"]`);
 
-      repeatElements(items, el, parent);
+      items.forEach(item => {
+        const newLi = el.cloneNode();
+        newLi.innerHTML = item;
+        parent.appendChild(newLi);
+      });
 
       for (const $el of Array.from(similarEls)) {
         $el.remove();
       }
     });
-    scope.$apply();
   });
 
   smallAngular.directive('ng-make-short', (scope, el, attrs) => {
     scope.$watch(() => attrs.length.value, () => {
       el.innerText = `${el.innerText.slice(0, attrs.length.value || 5)} ...`;
     });
-    scope.$apply();
   });
 
   smallAngular.directive('ng-model', (scope, el) => {

@@ -12,6 +12,9 @@
     "lint": "eslint --ext .js src/",
     "build": "webpack"
   },
+  "pre-commit": [
+    "lint"
+  ],
   "devDependencies": {
     "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
     "babel-eslint": "^10.0.1",
